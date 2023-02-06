@@ -1,0 +1,12 @@
+build/
+devel/
+logs/
+.catkin_tools/*
+*.out
+CMakeCache.txt
+CMaeFiles
+cmake_install.cmake
+*.kdev4
+*.DS*
+*.bag
+.vscode*

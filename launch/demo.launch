@@ -1,0 +1,6 @@
+<launch>
+  <!-- 启动节点 -->
+  <node name="my_slam_gmapping_readbag_node"
+    pkg="my_slam_gmapping"
+    type="my_slam_gmapping_readbag_node" output="screen"/>
+</launch>
