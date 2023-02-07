@@ -4,7 +4,6 @@ project(my_slam_gmapping)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rosbag
   std_msgs
   nav_msgs
 )
@@ -28,12 +27,3 @@ add_dependencies(${PROJECT_NAME}_readbag_node ${${PROJECT_NAME}_EXPORTED_TARGETS
 target_link_libraries(${PROJECT_NAME}_readbag_node
   ${catkin_LIBRARIES}
 )
-
-
-# add_executable(readbag
-#   src/readbag.cpp)
-
-# target_link_libraries(occupany_mapping
-#   ${catkin_LIBRARIES}
-#   ${EIGEN_LIBRARIES}
-# )

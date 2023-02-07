@@ -3,12 +3,7 @@
 
 occupancy_mapping.cpp 构建栅格地图
 
-`make build`
-`cd bulid`
-
-`cmake ..`
-
-`make`
+`catkin_make`
 
 简化方式
 
