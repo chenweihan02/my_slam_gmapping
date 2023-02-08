@@ -34,8 +34,8 @@ namespace GMapping {
      *  scan-matcher为每个粒子执行了一个局部最优化算法
      *  scan-matcher被用运动模型得到的位置来初始化，然后根据自己的地图来优化位置
     */
-   class GridSlamProcessor
-   {
+    class GridSlamProcessor
+    {
         public:
             /**
              * 树的节点，一个树储存了一整条轨迹，一个节点表示这条轨迹中的其中一个点　存储激光雷达的整条轨迹
@@ -181,7 +181,35 @@ namespace GMapping {
             PARAM_SET_GET(double, obsSigmaGain,             protected, public, public);
             //粒子选择性重采样的阈值
             PARAM_SET_GET(double, resampleThreshold,        protected, public, public);
-   };       
+        
+        private:
+            /**
+             * 在当前位姿　激光雷达的数据下，对每个粒子与当前的地图进行扫描匹配
+             * 通过爬山算法，每一层向　前后左右　左转　右转　6个方向　为每个粒子寻找最优位姿，直到最优位姿分数开始下降，或者超贵迭代次数，停止爬山
+             * 关于位姿得分，由score函数计算，在击中栅格周围的9个栅格，寻找最优得分
+            */
+            inline void scanMatch(const double *plainReading);
+
+            //更新每个粒子的权重，计算重采样neff
+            inline void normalize();
+
+            //粒子重采样　根据neff的大小来进行重采样　不但进行了重采样　也对地图进行更新
+            inline bool resample(const double* plainReading, int adaptParticles, const RangeReading* rr=0);
+    };
+
+    inline void GridSlamProcessor::scanMatch(const double* plainReading)
+    {
+        //每个粒子都要进行scan-match
+        int particle_number = m_particles.size();
+        for (int i = 0; i < particle_number; i ++ )
+        {
+            OrientedPoint corrected;
+            double score, l;
+            //爬山算法，score最优位姿的最大的匹配得分
+            score = m_matcher.optimize();
+            
+        }
+    }
 };
 
 #endif
