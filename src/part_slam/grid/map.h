@@ -78,9 +78,11 @@ namespace GMapping
             void resize(double xmin, double ymin, double xmax, double ymax);
 
             //物理坐标和栅格坐标的转换，后面加const，避免修改类的成员
-            inline IntPoint world2map(const Point& p) const;
-            inline IntPoint world2map(double x, double y) const {return world2map(Point(x, y));}
-            inline Point    map2world(const IntPoint& p) const;
+            inline IntPoint world2map(const Point &p) const;
+            inline IntPoint world2map(double x, double y) const { return world2map(Point(x, y)); }
+            inline Point map2world(const IntPoint &p) const;
+            inline Point map2world(int x, int y) const { return map2world(IntPoint(x, y)); }
+
 
             //返回地图的一些参数
             inline int getMapSizeX() const {return m_mapSizeX;}
