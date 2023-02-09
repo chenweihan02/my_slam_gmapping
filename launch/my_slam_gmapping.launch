@@ -4,6 +4,7 @@
         <param name="odom_frame" value="odom"/>
         <param name="map_frame"  value="map"/>
         <param name="scan_topic" value="scan"/>
+        <param name="laser_frame" value="base_footprint"/>
         
         <param name="map_update_interval" value="5.0"/>
         
