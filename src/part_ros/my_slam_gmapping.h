@@ -10,7 +10,8 @@
 #include "message_filters/subscriber.h"
 #include "tf/message_filter.h"
 
-
+#include "../part_slam/gridfastslam/gridslamprocessor.h"
+#include "../part_data/lidar_undistortion/lidar_undistortion.h"
 #include <boost/thread.hpp>
 
 //从smap的二位数组存粗格式，一维数组，数组序号也需要转换到一维数组
@@ -20,11 +21,11 @@
 #define GMAPPING_UNKNOWN    (-1)
 #define GMAPPING_OCC        (100)
 
-class MySlamGmapping
+class MySlamGMapping
 {
     public:
-        MySlamGmapping();
-        ~MySlamGmapping();
+        MySlamGMapping();
+        ~MySlamGMapping();
 
         void init();            //构造函数调用的初始化函数
         void startLiveSlam();   //开始实时slam
@@ -41,7 +42,7 @@ class MySlamGmapping
         bool getLidarPose(GMapping::OrientedPoint& gmap_pose, const ros::Time& t);  //获得当前帧对应的里程计位姿
         void updateMap(const sensor_msgs::LaserScan& scan);     //更新地图操作，主要是rviz的可视化操作部分
 
-        ros::NodeHandle node_;      //MySlamGmapping对象的句柄
+        ros::NodeHandle node_;      //MySlamGMapping对象的句柄
         ros::Publisher sst_;        //发布话题map
         ros::Publisher sstm_;       //发布话题map_metadata
         ros::ServiceServer ss_;     //发布服务dynamic_map
@@ -52,7 +53,7 @@ class MySlamGmapping
 
         tf::TransformBroadcaster* tfB_;     //tf变换的发布者，发布map与odom的TF变换
         LidarMotionCalibrator* lmc_;        //激光雷达运动畸变去除对象
-        Gmapping::GridSlamProcessor* gsp_;  //GridSlamSLAM的对象
+        GMapping::GridSlamProcessor* gsp_;  //GridSlamSLAM的对象
         std::vector<double> laser_ranges_;  //存储每一个激光点距离
         std::vector<double> laser_angles_;  //存储每一个激光点的角度
 
@@ -84,7 +85,7 @@ class MySlamGmapping
         double astep_;                      //旋转优化步长
         int iterations_;                    //扫描匹配迭代步数
         double lsigma_;                     //用于扫描匹配概率的激光标准差
-        double orgain_;                     //似然估计为平滑重采样影响使用的gain
+        double ogain_;                      //似然估计为平滑重采样影响使用的gain
         int lskip_;                         //每次扫描跳过的光束数
         double srr_;                        //平移时里程误差作为平移函数(rho/rho)
         double srt_;                        //平移时的里程误差作为旋转函数 (rho/theta)

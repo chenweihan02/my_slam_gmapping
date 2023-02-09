@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "my_slam_gmapping");
 
-    MySlamGmapping slamer;
+    MySlamGMapping slamer;
     slamer.startLiveSlam();
     ros::spin();
 

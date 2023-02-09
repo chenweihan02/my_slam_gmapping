@@ -13,8 +13,6 @@
 #include <deque>
 #include <omp.h>
 
-#include <vector>
-#include <deque>
 
 #include "../particlefilter/particlefilter.h"
 #include "../utils/point.h"

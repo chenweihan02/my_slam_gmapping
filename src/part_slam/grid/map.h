@@ -1,6 +1,5 @@
 #ifndef MAP_H
 #define MAP_H
-
 #include "../utils/point.h"
 #include <assert.h>
 #include "harray2d.h"
@@ -136,6 +135,21 @@ namespace GMapping
         m_mapSizeY=m_storage.getYSize()<<m_storage.getPatchSize();
         m_sizeX2=m_mapSizeX>>1;
         m_sizeY2=m_mapSizeY>>1;
+    }
+
+    //构造函数
+    template <class Cell, class Storage, const bool isClass>
+    Map<Cell,Storage,isClass>::Map(const Point& center, double xmin, double ymin, double xmax, double ymax, double delta):
+        m_storage((int)ceil((xmax-xmin)/delta), (int)ceil((ymax-ymin)/delta))
+    {
+        m_center=center;
+        m_worldSizeX=xmax-xmin;
+        m_worldSizeY=ymax-ymin;
+        m_delta=delta;
+        m_mapSizeX=m_storage.getXSize()<<m_storage.getPatchSize();
+        m_mapSizeY=m_storage.getYSize()<<m_storage.getPatchSize();
+        m_sizeX2=(int)round((m_center.x-xmin)/m_delta);
+        m_sizeY2=(int)round((m_center.y-ymin)/m_delta);
     }
 
     //重新设置地图的大小，ceil向上取整，floor向下取整
