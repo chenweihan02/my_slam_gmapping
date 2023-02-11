@@ -69,6 +69,13 @@ namespace GMapping{
     }
 
     // 每个粒子调用爬山算法函数，optimize函数对位姿进行适当修改，分为四个方向和两个转向，就是为了得到一个得分更好的位姿，直到得分开始下降才认为，此时的位姿点为，最优位姿点
+    /**
+     * 根据地图、激光数据、位姿迭代求解一个最优的新的位姿出来，被用来调用进行scan-match的函数
+     * @param pnew       新的最优位置
+     * @param map        地图
+     * @param init       初始位置
+     * @param reading    激光数据
+     * */
     double ScanMatcher::optimize(OrientedPoint &pnew, const ScanMatcherMap &map, const OrientedPoint &init, const double *readings) const
     {
         double bestScore = -1;

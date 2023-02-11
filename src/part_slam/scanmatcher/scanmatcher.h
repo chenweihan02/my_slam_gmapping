@@ -50,7 +50,8 @@ namespace GMapping
         PARAM_SET_GET(double, freeCellRatio, protected, public, public)              // 击中点旁边的空闲点的距离差
     };
 
-    /**
+    /** 
+     * 《概率机器人》likehood_field_range_finder_model
      * 输入当前地图和当前经过运动模型更新的激光雷达位姿p，以及激光雷达数据
      * 遍历若干激光束，求当前激光雷达位姿p与地图的匹配得分，越匹配，位姿得分越高
      * 匹配的方式就是找到，击中点和九宫格中的点的差距最小的点，差距越小，得分越高，越匹配，并且遍历若干束激光束局，计算累计得分

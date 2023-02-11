@@ -178,13 +178,13 @@ void MySlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr &scan)
 
     if (!got_first_scan_) // 如果是第一次接收scan
     {
-        if (!initMapper(*scan)) // 初始化地图
+        if (!initMapper(*scan)) // 初始化地图-------------------1\initMapper---------------------------
             return;
         got_first_scan_ = true; // 改变第一帧的标志位
     }
 
     GMapping::OrientedPoint odom_pose; // 当前里程计坐标系下的激光雷达位姿的临时变量
-    if (addScan(*scan, odom_pose))
+    if (addScan(*scan, odom_pose)) // 叠加激光---------------------2\addScan-----------------------------
     {
         ROS_DEBUG("addScan finish");
         // 最优粒子，地图坐标系下的激光雷达位姿
@@ -202,11 +202,11 @@ void MySlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr &scan)
         map_to_odom_ = map_to_lidar * (odom_to_lidar.inverse()); // 表述里程计坐标系和map坐标系的差距
         map_to_odom_mutex_.unlock();
 
-        // 多久更新一次地图
+        // 多久更新一次地图 如果当前激光雷达时间余上一帧时间超过更新阈值 就更新该地图
         if (!got_map_ || (scan->header.stamp - last_map_update) > map_update_interval_)
         {
-            updateMap(*scan);
-            last_map_update = scan->header.stamp;
+            updateMap(*scan);   // 对地图进行更新-------------------------3\updateMap------------------------
+            last_map_update = scan->header.stamp; // 更新上一帧时间戳
             ROS_INFO("Updated the map");
         }
     }
@@ -236,8 +236,8 @@ bool MySlamGMapping::initMapper(const sensor_msgs::LaserScan &scan)
     // 为gmapping算法设置各种参数
     gsp_->setMatchingParameters(maxUrange_, maxRange_, sigma_, kernelSize_, lstep_, astep_, iterations_, lsigma_, ogain_, lskip_);
     gsp_->setMotionModelParameters(srr_, srt_, str_, stt_);
-    gsp_->setUpdateDistances(linearUpdate_, angularUpdate_, resampleThreshold_);
-    gsp_->setUpdatePeriod(temporalUpdate_);
+    gsp_->setUpdateDistances(linearUpdate_, angularUpdate_, resampleThreshold_);    // 设置更新距离
+    gsp_->setUpdatePeriod(temporalUpdate_);     // 设置更新周期
     // 初始化 m_generateMap = false（是scanmatch中的成员变量）
     gsp_->setgenerateMap(false);
     // 初始化粒子个数，地图尺寸，分辨率，建图初始位姿
@@ -252,6 +252,7 @@ bool MySlamGMapping::initMapper(const sensor_msgs::LaserScan &scan)
 }
 
 // 每一帧激光数据，都要通过该函数封装gmapping算法需要的数据格式，并调用核心算法
+// 读取激光雷达信息，重新定义激光数据类型
 bool MySlamGMapping::addScan(const sensor_msgs::LaserScan &scan, GMapping::OrientedPoint &gmap_pose)
 {
     // 得到该scan时刻，激光雷达在里程计下的位姿
